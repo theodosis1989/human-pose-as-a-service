@@ -57,3 +57,27 @@ build/
 # Terraform variables
 terraform.tfvars
 *.tfvars
+
+# React Native / Expo
+.expo/
+.expo-shared/
+dist/
+build/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# Debug
+*.tsbuildinfo
+app-example

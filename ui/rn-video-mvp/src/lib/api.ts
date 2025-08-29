@@ -3,11 +3,13 @@ import { supabase } from "./supabase";
 
 async function getAccessToken() {
   const { data } = await supabase.auth.getSession();
+  console.log("RN session token?", data.session?.access_token);
   return data.session?.access_token ?? null;
 }
 
 export async function apiFetch(path: string, init: RequestInit = {}) {
   const token = await getAccessToken();
+  console.log("RN apiFetch token?", token);
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers: {

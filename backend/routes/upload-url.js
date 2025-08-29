@@ -23,8 +23,6 @@ router.get('/', async (req, res) => {
 
     let userId;
 
-    console.log('userId before auth:', userId);
-
     if (!allowAnon) {
       // --- normal auth path ---
       const token = req.headers.authorization?.split('Bearer ')[1];

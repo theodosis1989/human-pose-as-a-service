@@ -38,4 +38,4 @@ ENV PYTHONPATH=/var/task/src
 COPY src/ /app/src/
 
 # Set the Lambda function handler
-CMD ["lambda.app.lambda_handler"]
+CMD ["src.app.lambda_handler"]

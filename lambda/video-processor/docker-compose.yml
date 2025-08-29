@@ -1,0 +1,12 @@
+version: "3"
+services:
+  pose:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - ./src/local/input:/app/src/local/input
+      - ./src/local/output:/app/src/local/output
+    working_dir: /app
+    command: python -m src.local.run_local

@@ -6,7 +6,7 @@ resource "aws_s3_bucket_cors_configuration" "this" {
   bucket = aws_s3_bucket.uploads.id
 
   cors_rule {
-    allowed_methods = ["PUT", "GET", "HEAD"]
+    allowed_methods = ["POST", "PUT", "GET", "HEAD"]
     allowed_origins = var.allowed_origins
     allowed_headers = ["*"]
     expose_headers  = ["ETag", "x-amz-version-id"]
@@ -37,8 +37,14 @@ resource "aws_s3_bucket_notification" "uploads_trigger" {
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.auth_lambda.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "uploads/"
+    # Include POST because you are using presigned POST uploads
+    events = [
+      "s3:ObjectCreated:Post",
+      "s3:ObjectCreated:Put",
+      "s3:ObjectCreated:CompleteMultipartUpload"
+    ]
+    filter_prefix = "uploads/"
+    filter_suffix = ".mp4"
   }
 
   depends_on = [aws_lambda_permission.allow_s3_invoke]

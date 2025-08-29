@@ -3,31 +3,19 @@ import { supabase } from "./supabase";
 
 async function getAccessToken() {
   const { data } = await supabase.auth.getSession();
-  console.log("RN session token?", data.session?.access_token);
   return data.session?.access_token ?? null;
 }
 
-export async function apiFetch(path: string, init: RequestInit = {}) {
+export async function apiGet(path: string) {
   const token = await getAccessToken();
-  console.log("RN apiFetch token?", token);
   const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
+    method: "GET",
     headers: {
-      ...(init.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
-  if (!res.ok)
+  if (!res.ok) {
     throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`);
-  const ct = res.headers.get("content-type") || "";
-  return ct.includes("application/json") ? res.json() : res.text();
+  }
+  return res.json();
 }
-
-// Convenience wrappers if you like:
-export const apiGet = (path: string) => apiFetch(path, { method: "GET" });
-export const apiPost = (path: string, body: any) =>
-  apiFetch(path, {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" },
-  });

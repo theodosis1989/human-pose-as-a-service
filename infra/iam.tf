@@ -119,3 +119,23 @@ resource "aws_iam_user_policy_attachment" "attach_uploader_put" {
   user       = data.aws_iam_user.uploader.user_name
   policy_arn = aws_iam_policy.uploader_put_policy.arn
 }
+
+########################################
+# Video API role to post upload to uploads S3 bucket
+########################################
+
+resource "aws_iam_role_policy" "video_api_s3_put" {
+  name = "video-api-allow-put-uploads"
+  role = aws_iam_role.video_api_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = ["s3:PutObject"],
+        Resource = "arn:aws:s3:::${aws_s3_bucket.uploads.bucket}/uploads/*"
+      }
+    ]
+  })
+}
